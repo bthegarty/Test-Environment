@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Basic JS animation</title>
+    <link rel="stylesheet" href="style.css">
+    <script scr="js/script.js"></script>
+  </head>
+  <body>
+    <h1>1st js animation</h1>
+    <p>
+    <button onClick="move();">Press</button>
+    </p>
+    <div id="container">
+      <!-- all animations should be relative to a container -->
+      <div id="animation">
+      </div>
+    </div>
+    <script>
+      function move(){
+        var elem = document.getElementById('animation');
+        var pos = 0;
+        var id = setInterval(frame, 5);
+        function frame() {
+          if(pos == 350){
+            clearInterval(id);
+          }
+          else{
+            pos++;
+            elem.style.top = pos + 'px';
+            elem.style.left = pos + 'px';
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

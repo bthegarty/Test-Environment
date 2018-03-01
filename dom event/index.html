@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <title>DOM</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body onload='checkCookies()'>
+    <h1 onclick='changeText(this)'>Click here, buddy</h1>
+    <button onclick='date()'>Date & Time</button>
+
+    <script>
+      function changeText(id){
+        id.innerHTML = 'Sup';
+      }
+
+      function date(){
+        document.getElementById('demo').innerHTML = Date();
+      }
+
+      function checkCookies(){
+        var text = '';
+        if (navigator.cookieEnbled == true){
+          text = 'cookies are enabled.';
+        }
+        else{
+          text = 'cookies are not enabled.';
+        }
+        document.getElementById('demo').innerHTML = text;
+      }
+    </script>
+
+    <p id='demo'></p>
+
+  </body>
+</html>
