@@ -12,14 +12,14 @@
     </style>
   </head>
   <body onload="startGame()">
-    <!-- something in here doesnt work as intented -->
+    <!-- something in here causing collision issues -->
     <script>
       var myGamePiece;
       var myObstacles = [];
       var myScore;
 
       function startGame(){
-        myGamePiece = new component(30,30, "red", 10, 120);
+        myGamePiece = new component(30, 30, "red", 10, 120);
         myGamePiece.gravity = 0.05;
         myScore = new component("30px", "Consolas", "black", 280, 40, "text");
         myGameArea.start();
@@ -35,8 +35,9 @@
             this.frameNo = 0;
             this.interval = setInterval(updateGameArea, 20);
           },
+          // this makes the "bird" maintain size while moving
         clear : function(){
-
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
       }
 
@@ -68,11 +69,16 @@
           this.x += this.speedX;
           this.y += this.speedY + this.gravitySpeed;
           this.hitBottom();
-          // this.hitTop();
+          this.hitTop();
         }
-        // this.hitTop = function(){
-        //
-        // }
+        this.hitTop = function(){
+          // top colision is off
+          var skyhigh = myGameArea.canvas.height + this.height;
+          if(this.y > skyhigh){
+            this.y = skyhigh;
+            this.gravitySpeed = 0;
+          }
+        }
         this.hitBottom = function(){
           var rockbottom = myGameArea.canvas.height - this.height;
           if(this.y > rockbottom){
@@ -97,9 +103,11 @@
         }
       }
 
+      // I have no clue how to spell length and I hate myself
+      // this takes care of gap and crash case
       function updateGameArea(){
         var x, height, gap, minHeight, maxHeight, minGap, maxGap;
-        for(i = 0; i < myObstacles.lenght; i += 1){
+        for(i = 0; i < myObstacles.length; i += 1){
           if(myGamePiece.crashWith(myObstacles[i])){
             return;
           }
@@ -107,16 +115,22 @@
         myGameArea.clear();
         myGameArea.frameNo += 1;
         if(myGameArea.frameNo == 1 || everyinterval(150)){
-          x = myGameArea.canvas.width;
-          minHeight = 20;
-          maxHeight = 200;
-          height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
-          minGap = 50;
-          maxGap = 200;
-          gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-          myObstacles.push(new component(10, height, "green", x, 0));
-          myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
+            x = myGameArea.canvas.width;
+            minHeight = 20;
+            maxHeight = 200;
+            height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
+            minGap = 50;
+            maxGap = 200;
+            gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
+            myObstacles.push(new component(10, height, "green", x, 0));
+            myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
         }
+        // this populates the obstacles
+        for(i = 0; i < myObstacles.length; i += 1) {
+            myObstacles[i].x += -1;
+            myObstacles[i].update();
+        }
+        // maintains score in the top right
         myScore.text="SCORE: " + myGameArea.frameNo;
         myScore.update();
         myGamePiece.newPos();
