@@ -52,6 +52,7 @@
         this.y = y;
         this.gravity = 0;
         this.gravitySpeed = 0;
+        this.bounce = 0.4;
         this.update = function() {
           ctx = myGameArea.context;
           if(this.type == "text"){
@@ -83,7 +84,7 @@
           var rockbottom = myGameArea.canvas.height - this.height;
           if(this.y > rockbottom){
             this.y = rockbottom;
-            this.gravitySpeed = 0;
+            this.gravitySpeed = -(this.gravitySpeed * this.bounce);
           }
         }
         this.crashWith = function(otherobj){
